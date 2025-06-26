@@ -1,12 +1,5 @@
 <?php 
-require('../_config.php');
-$parts=parse_url($_SERVER['REQUEST_URI']); 
-$page_url=explode('/', $parts['path']);
-$id = $page_url[count($page_url)-1];
-//$id = "action";
-$genre = str_replace("+", "-", $id);
-$id = str_replace("+", " ", $id);
-$id = ucfirst($id);
+require('../_config.php'); 
 $page = $_GET['page']; 
 if ($page == ""){
     $page = 1;
@@ -16,11 +9,11 @@ if ($page == ""){
 <html prefix="og: http://ogp.me/ns#" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-    <title><?=$id?> on <?=$websiteTitle?></title>
+    <title>Latest Chinese Subbed on <?=$websiteTitle?></title>
     
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="title" content="<?=$id?> on <?=$websiteTitle?>">
-    <meta name="description" content="Popular Anime in HD with No Ads. Watch anime online">
+    <meta name="title" content="Latest Chinese Subbed on <?=$websiteTitle?>">
+    <meta name="description" content="Anime Movies in HD with No Ads. Watch anime online">
     <meta name="keywords" content="<?=$websiteTitle?>, watch anime online, free anime, anime stream, anime hd, english sub, kissanime, gogoanime, animeultima, 9anime, 123animes, <?=$websiteTitle?>, vidstreaming, gogo-stream, animekisa, zoro.to, gogoanime.run, animefrenzy, animekisa">
     <meta name="charset" content="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
@@ -28,8 +21,8 @@ if ($page == ""){
     <meta name="googlebot" content="index, follow">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Content-Language" content="en">
-    <meta property="og:title" content="<?=$id?> on <?=$websiteTitle?>">
-    <meta property="og:description" content="<?=$id?> on <?=$websiteTitle?> in HD with No Ads. Watch anime online">
+    <meta property="og:title" content="Latest Chinese Subbed on <?=$websiteTitle?>">
+    <meta property="og:description" content="Latest Chinese Subbed on <?=$websiteTitle?> in HD with No Ads. Watch anime online">
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="<?=$websiteTitle?>">
@@ -80,7 +73,7 @@ if ($page == ""){
                     <section class="block_area block_area_category">
                         <div class="block_area-header">
                             <div class="float-left bah-heading mr-4">
-                                <h2 class="cat-heading">Genre: <?=$id?></h2>
+                                <h2 class="cat-heading">Chinese Subbed</h2>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -89,45 +82,41 @@ if ($page == ""){
                                 <div class="film_list-wrap">
 
                                 <?php 
-                                $json = file_get_contents("$api/genre/$genre?page=$page");
+                                $json = file_get_contents("$api/recent-release?type=3&page=$page");
+                                $SubOrDub = $chinese['subOrDub'] ;
                                 $json = json_decode($json, true);
-                                foreach($json as $key => $genreFetch) { ?>
+                                foreach($json as $key => $chinese) { ?>
                                     <div class="flw-item">
                                         <div class="film-poster">
-                                            <div class="tick ltr">
-                                                <div class="tick-item-<?php $str = $genreFetch['animeTitle'];
-                                                  $last_word_start = strrpos ( $str , " ") + 1;
-                                                  $last_word_end = strlen($str) - 1;
-                                                  $last_word = substr($str, $last_word_start, $last_word_end);
-                                                  if ($last_word == "(Dub)"){echo "dub";} else {echo "sub";}
-                                                ?>   tick-eps amp-algn"><?php $str = $genreFetch['animeTitle'];
-                                                $last_word_start = strrpos ( $str , " ") + 1;
-                                                $last_word_end = strlen($str) - 1;
-                                                $last_word = substr($str, $last_word_start, $last_word_end);
-                                                if ($last_word == "(Dub)"){echo "Dub";} else {echo "Sub";}
-                                              ?></div>
+                                        <div class="tick ltr">
+                                                <div class="tick-item-<?php $str = $chinese['subOrDub'];
+                                                  echo strtolower($str);
+                                                ?> tick-eps amp-algn"><?=$chinese['subOrDub']?></div>
                                             </div>
                                             <div class="tick rtl">
+                                                <div class="tick-item tick-eps amp-algn">Episode <?=$chinese['episodeNum']?></div>
                                             </div>
                                             <img class="film-poster-img lazyload"
-                                                data-src="<?=$genreFetch['animeImg']?>"
+                                                data-src="<?=$chinese['imgUrl']?>"
                                                 src="<?=$websiteUrl?>/files/images/no_poster.jpg"
-                                                alt="<?=$genreFetch['animeTitle']?>">
+                                                alt="<?=$chinese['name']?>">
                                             <a class="film-poster-ahref"
-                                                href="/anime/<?=$genreFetch['animeId']?>"
-                                                title="<?=$genreFetch['animeTitle']?>"
-                                                data-jname="<?=$genreFetch['animeTitle']?>"><i class="fas fa-play"></i></a>
+                                                href="/watch/<?=$chinese['episodeId']?>"
+                                                title="<?=$chinese['name']?>"
+                                                data-jname="<?=$chinese['name']?>"><i class="fas fa-play"></i></a>
                                         </div>
                                         <div class="film-detail">
                                             <h3 class="film-name">
                                                 <a
-                                                    href="/anime/<?=$genreFetch['animeId']?>"
-                                                    title="<?=$genreFetch['animeTitle']?>"
-                                                    data-jname="<?=$genreFetch['animeTitle']?>"><?=$genreFetch['animeTitle']?></a>
+                                                    href="/watch/<?=$chinese['episodeId']?>"
+                                                    title="<?=$chinese['name']?>"
+                                                    data-jname="<?=$chinese['name']?>"><?=$chinese['name']?></a>
                                             </h3>
                                             <div class="description"></div>
                                             <div class="fd-infor">
-                                                <span class="fdi-item"><?=$genreFetch['releasedDate']?></span>
+                                                <span class="fdi-item"><?=$chinese['subOrDub']?></span>
+                                                <span class="dot"></span>
+                                                <span class="fdi-item">Latest</span>
                                             </div>
                                         </div>
                                         <div class="clearfix"></div>
@@ -164,9 +153,9 @@ if ($page == ""){
                                     <nav>
                                         <ul class="ulclear az-list">
                                         <?php 
-                                           $genreFetchPage = file_get_contents("$api/genrePage?genre=$genre&page=$page");
-                                           $genreFetchPage = json_decode($genreFetchPage, true); { ?>
-                                             <?=$genreFetchPage['pagination']; ?>
+                                           $chinesePage = file_get_contents("$api/recent-release-page?page=$page&type=3");
+                                           $chinesePage = json_decode($chinesePage, true); { ?>
+                                             <?=$chinesePage['pagination']; ?>
                                            <?php } ?>
                                         </ul>
                                     </nav>
@@ -189,7 +178,7 @@ if ($page == ""){
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
         <script type="text/javascript" src="<?=$websiteUrl?>/files/js/app.js"></script>
         <script type="text/javascript" src="<?=$websiteUrl?>/files/js/comman.js"></script>
-        <script type="text/javascript" src="<?=$websiteUrl?>/files/js/movie.js"></script>
+        <script type="text/javascript" src="<?=$websiteUrl?>/files/js/subbed.js"></script>
         <link rel="stylesheet" href="<?=$websiteUrl?>/files/css/jquery-ui.css">
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src="<?=$websiteUrl?>/files/js/function.js"></script>
